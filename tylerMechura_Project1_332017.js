@@ -17,16 +17,6 @@ var bBarY = 40;
 var bBarW = 100;
 var bBarH = 30;
 
-// wave points
-var wX1;
-var wX2;
-var wX3;
-var wX4;
-var wY1;
-var wY2;
-var wY3;
-var wY4;
-
 function setup() {
   createCanvas(700, 500);
   
@@ -96,7 +86,7 @@ function wave1(anchorX, anchorY, anchorX2, clr){
   
 }
 
-function wave(x, y, w, h, a, clr) { // use random within a certain range to create 'waves' for the stick to ride on and the fish to follow
+/*function wave(x, y, w, h, a, clr) { // use random within a certain range to create 'waves' for the stick to ride on and the fish to follow
   // basic wave functions from the built in graphics of p5
   fill(clr);
   noStroke();
@@ -107,7 +97,7 @@ function wave(x, y, w, h, a, clr) { // use random within a certain range to crea
   
   // initialize the wave
   arc(x, oceanY, waveW, waveH, PI, 0, OPEN);
-}
+}*/
 
 function ocean(clr) { // using function 'waves' to create a neverending ocean
   noStroke();
