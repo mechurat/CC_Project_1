@@ -1,7 +1,7 @@
 # CC_Project_1
 Project 1 for Creative Coding
 
-## Adjective: Swimming
+## Adjective: Neverending
 This project will feature an interactive animation of a stick figure swimming through a pool.
 
 Pressing spacebar will cause him to jump off the diving board and into the water
