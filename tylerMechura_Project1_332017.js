@@ -12,10 +12,12 @@ var oceanH = 220;
 var clrOcean = 0;
 var fillBar = 0;
 
-var bBarX = 560;
-var bBarY = 40;
-var bBarW = 100;
-var bBarH = 30;
+var bBarX = 510;
+var bBarY = 30;
+var bBarW = 150;
+var bBarH = 10;
+
+var wFill = bBarW;
 
 var ocean;
 
@@ -24,6 +26,8 @@ function setup() {
 
   // defining commonly used colors
   clrOcean = color(80, 160, 220, 80);
+
+  // initializing objects
   ocean = new Ocean(clrOcean);
   ocean.initialize();
 }
@@ -33,34 +37,49 @@ function draw() {
 
   ocean.display();
 
-  breathBar(bBarX, bBarY, bBarW, bBarH, color(220)); // functionality of the bar coming into play
+  breathBar(bBarX, bBarY, bBarW, bBarH, color(220)); // functionality of the air gauge
   // uses a white rectangle in the same position as 
 }
 
-// breath bar
+
+
+///////////////////////////////////////////
+// OBJECTS AND FUNCTIONS FOR USE IN DRAW //
+///////////////////////////////////////////
+
+// Breath Bar
 function breathBar(x, y, w, h, clr) { // the aesthetics of the breath bar and the mouse clicked funcionality
   // outer slider
   fill('black');
-  rect(x - 10, y - 10, w + 20, h + 20, 8);
+  rect(x - 5, y - 5, w + 10, h + 10, 8);
 
   // inner part of breathbar
   noStroke();
   fill(color(220));
   rect(x, y, w, h);
-
-  //  fill(clr);
+  
+  // The blue "breath" level
+  // color of bar
   fill('blue');
-  var wFill = w;
-  // to be filled later:
-  // empty bar when mouse is not pressed
-  // fill bar when mouse is pressed
+  // the actual bar (starts full)
+  rect(x, y, wFill, h);
+  // fills if mouse is pressed up until limit
+  if (wFill <= w && mouseIsPressed == true) {
+    wFill+=2;
+  } 
+  // empties until fill value is less than or equal to zero
+  else if (wFill >= 0 && mouseIsPressed == false) {
+    wFill = wFill - 0.2;
+  }
 }
 
 // OBJECT: Wave
 function Wave(anchorX, anchorY, anchorX2, clr) {
 
-  // CONSTRUCTOR
-  /////////////////////////////////////
+  /////////////////
+  // CONSTRUCTOR //
+  /////////////////
+
   // anchor 1
   this.x1 = anchorX;
   this.y1 = anchorY;
@@ -75,14 +94,17 @@ function Wave(anchorX, anchorY, anchorX2, clr) {
   this.y4 = anchorY;
 
 
-  // OBJECT FUNCTIONS
-  /////////////////////////////////////
-  // creation of the wave
+  //////////////////////
+  // OBJECT FUNCTIONS //
+  //////////////////////
+
+  // wave display on screen
   this.display = function () {
     noStroke();
     fill(clr);
     bezier(this.x1, this.y1, this.x2, this.y2, this.x3, this.y3, this.x4, this.y4);
   }
+
   // Move
   // Called in order to move the wave one pixel to the left
   this.move = function () {
@@ -93,10 +115,12 @@ function Wave(anchorX, anchorY, anchorX2, clr) {
   }
 }
 
-function Ocean(clr) { // using function 'waves' to create a neverending ocean
+function Ocean(clr) { // using OBJECT 'Wave' to create a neverending ocean when displayed
 
-  // CONSTRUCTOR
-  /////////////////////////////////////
+  /////////////////
+  // CONSTRUCTOR //
+  /////////////////
+  // color of ocean
   this.clr = clr;
 
   this.waveArray = [];
@@ -105,8 +129,9 @@ function Ocean(clr) { // using function 'waves' to create a neverending ocean
   this.anchorX2 = random(300, 400);
 
 
-  // OBJECT FUNCTIONS
-  /////////////////////////////////////
+  //////////////////////
+  // OBJECT FUNCTIONS //
+  //////////////////////
   // The Display Loop
   this.display = function () {
       // main rectangle for body of ocean
@@ -115,29 +140,36 @@ function Ocean(clr) { // using function 'waves' to create a neverending ocean
       rect(0, oceanY, width, oceanH);
 
       for (var i = 0; i < this.waveArray.length; i++) {
-        
+
         // Wave functions called for each one
         this.waveArray[i].display();
         this.waveArray[i].move();
-        
-        // When a wave moves off screen, delete it and add a new one to the end of the array
+
+        // when a wave moves off screen on the left, do this statement
         if (this.waveArray[i].x4 < 0) {
+          // delete first object in array
           this.waveArray.splice(0, 1);
-          this.waveArray[this.waveArray.length] = new Wave( 
-            this.waveArray[this.waveArray.length-1].x4+20, 
-            oceanY, 
-            this.waveArray[this.waveArray.length-1].x4+random(300,400), 
+          // create new wave as a new entry at the end of the array
+          this.waveArray[this.waveArray.length] = new Wave(
+            this.waveArray[this.waveArray.length - 1].x4 + 20,
+            oceanY,
+            this.waveArray[this.waveArray.length - 1].x4 + random(300, 400),
             this.clr);
+          // test the length for memory leak
+          console.log(this.waveArray.length);
         }
       }
     }
     // for loop that puts several waves in an array for looping in function oceanMove()
-  
+
   // INITIALIZATION
   // Used in Setup
   this.initialize = function () {
+    // creates the initial array of TEN waves to guarantee the waves go off-screen
     for (var i = 0; i < 10; i++) {
+      // creates a new wave
       this.waveArray[i] = new Wave(this.anchorX, oceanY, this.anchorX2, this.clr);
+      // changes the anchor value so that the wave is placed AFTER the one before it
       this.anchorX = this.anchorX2 + 20;
       this.anchorX2 += random(300, 400);
     }
