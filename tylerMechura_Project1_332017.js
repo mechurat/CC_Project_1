@@ -1,18 +1,14 @@
-var r = 0;
-var g = 0;
-var b = 0;
-var a = 0;
-
 var mainX = 0;
 var mainY = 0;
 
 var oceanY = 280;
 var oceanH = 220;
 
+//
 var clrOcean = 0;
-var fillBar = 0;
 
-var bBarX = 510;
+// Breathing Bar globals
+var bBarX = 1110;
 var bBarY = 30;
 var bBarW = 150;
 var bBarH = 10;
@@ -22,7 +18,7 @@ var wFill = bBarW;
 var ocean;
 
 function setup() {
-  createCanvas(700, 500);
+  createCanvas(1300, 500);
 
   // defining commonly used colors
   clrOcean = color(80, 160, 220, 80);
@@ -40,8 +36,6 @@ function draw() {
   breathBar(bBarX, bBarY, bBarW, bBarH, color(220)); // functionality of the air gauge
   // uses a white rectangle in the same position as 
 }
-
-
 
 ///////////////////////////////////////////
 // OBJECTS AND FUNCTIONS FOR USE IN DRAW //
@@ -176,7 +170,7 @@ function Ocean(clr) { // using OBJECT 'Wave' to create a neverending ocean when 
   }
 }
 
-function stick() { // the stickfigure
+function Stick() { // the stickfigure
 
 }
 
@@ -184,11 +178,6 @@ function swim() { // the stickfigure swimming
 
 }
 
-function fish() { // the fish that follows the stickfigure through the ocean
-
-
-}
-
-function fishSwim() { // the fish swimming;
-
+function Fish() { // the fish that follows the stickfigure through the ocean
+  
 }
