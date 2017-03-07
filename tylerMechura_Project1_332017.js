@@ -19,17 +19,17 @@ var bBarH = 30;
 
 function setup() {
   createCanvas(700, 500);
-  
+
   // defining commonly used colors
-  clrOcean = color(80, 160, 220, 80)
+  clrOcean = color(80, 160, 220, 80);
 }
 
 function draw() {
   background(220);
-  
+
   // the body of the ocean. Never changes
-  ocean(clrOcean);  
-  
+  ocean(clrOcean);
+
   breathBar(bBarX, bBarY, bBarW, bBarH, color(220)); // functionality of the bar coming into play
   // uses a white rectangle in the same position as 
 }
@@ -48,19 +48,19 @@ function breathBar(x, y, w, h, clr) { // the aesthetics of the breath bar and th
   //  fill(clr);
   fill('blue');
   var wFill = w;
-  
-//  function keyPressed(){
-//    if( keyCode == SPACEBAR ){
-//      
-//    }
-//    
-//    else( keyCode == ESCAPE){
-//      return false;
-//    }
-//    
-//    
-//  }
-  while(keyIsPressed === false) { // for loop to decrease breath meeter until empty, then stop
+
+  //  function keyPressed(){
+  //    if( keyCode == SPACEBAR ){
+  //      
+  //    }
+  //    
+  //    else( keyCode == ESCAPE){
+  //      return false;
+  //    }
+  //    
+  //    
+  //  }
+  while (keyIsPressed === false) { // for loop to decrease breath meeter until empty, then stop
     if (mouseIsPressed == true && wFill <= w) { // if the mouse is pressed and wFill is less than the full, increase the size of breath rectangle
       i += 2; // increase the size of the rectangle
       rect(x, y, i, h); // redraw rectangle      
@@ -71,42 +71,44 @@ function breathBar(x, y, w, h, clr) { // the aesthetics of the breath bar and th
 }
 
 // bezier wave
-function wave1(anchorX, anchorY, anchorX2, clr){
+function wave(anchorX, anchorY, anchorX2, clr) {
   noStroke();
   fill(clr)
-  
-  var x2 = random(oceanY, oceanY-70);
-  var y2 = random(oceanY, oceanY-70);
-  
-  var x3 = random(oceanY, oceanY-70);
-  var y3 = random(oceanY, oceanY-70);
 
-  
+  // first control point
+  var x2 = random(anchorX, anchorX2); // make sure the point is always between the two anchor points
+  var y2 = random(oceanY, oceanY - 70); // make sure the point is always above the ocean surface
+  // second control point
+  var x3 = random(anchorX, anchorX2);
+  var y3 = random(oceanY, oceanY - 70);
+
+  // creation of the wave
   bezier(anchorX, anchorY, x2, y2, x3, y3, anchorX2, anchorY)
-  
-}
 
-/*function wave(x, y, w, h, a, clr) { // use random within a certain range to create 'waves' for the stick to ride on and the fish to follow
-  // basic wave functions from the built in graphics of p5
-  fill(clr);
-  noStroke();
-  
-  // random values for the wave's width and height defined
-  var waveW = random(w-30, w+30); 
-  var waveH = random(h-200, h+20);
-  
-  // initialize the wave
-  arc(x, oceanY, waveW, waveH, PI, 0, OPEN);
-}*/
+}
 
 function ocean(clr) { // using function 'waves' to create a neverending ocean
   noStroke();
   fill(clr);
-  rect( 0, oceanY, width, oceanH );
-  
-  var anchorX2 = oceanY+random(50,130);
-  wave1(0, oceanY, anchorX2, clr );
+  rect(0, oceanY, width, oceanH);
+
+  // the waves of the ocean stored in an array
+  var waveArray = [];
+
+  // anchor points for the first wave bezier in waveArray
+  var anchorX = 0;
+  var anchorX2 = random(300, 400);
+
+
+  for (var i = 0; i < 10; i++) {
+    waveArray[i] = new wave(anchorX, oceanY, anchorX2, clr);
+    anchorX = anchorX2 + 20;
+    anchorX2 += random(300, 400);
+  }
+
 }
+
+function oceanMove(ocean){}
 
 function stick() { // the stickfigure
 
