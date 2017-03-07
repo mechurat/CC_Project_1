@@ -4,8 +4,12 @@ var mainY = 0;
 var oceanY = 280;
 var oceanH = 220;
 
-//
 var clrOcean = 0;
+var clrBreathOut = 0;
+var alphaBreath = 0;
+var clrDolphin = 0;
+
+var dieing = 0;
 
 // Breathing Bar globals
 var bBarX = 1110;
@@ -22,6 +26,7 @@ function setup() {
 
   // defining commonly used colors
   clrOcean = color(80, 160, 220, 80);
+  clrDolphin = color(52, 239, 239);
 
   // initializing objects
   ocean = new Ocean(clrOcean);
@@ -29,12 +34,24 @@ function setup() {
 }
 
 function draw() {
+
   background(220);
 
   ocean.display();
 
   breathBar(bBarX, bBarY, bBarW, bBarH, color(220)); // functionality of the air gauge
-  // uses a white rectangle in the same position as 
+
+  clrBreathOut = color(250, 60, 60, alphaBreath);
+  if (wFill <= 0 && alphaBreath <= 255) {
+    alphaBreath += 0.4;
+    console.log('alpha increased ' + alphaBreath);
+  } else if (wFill > 0 && alphaBreath > 0) {
+    alphaBreath = alphaBreath - 1.5;
+    console.log('alpha decreased' + alphaBreath);
+  }
+  noStroke();
+  fill(clrBreathOut);
+  rect(0, 0, width, height);
 }
 
 ///////////////////////////////////////////
@@ -51,7 +68,7 @@ function breathBar(x, y, w, h, clr) { // the aesthetics of the breath bar and th
   noStroke();
   fill(color(220));
   rect(x, y, w, h);
-  
+
   // The blue "breath" level
   // color of bar
   fill('blue');
@@ -59,12 +76,16 @@ function breathBar(x, y, w, h, clr) { // the aesthetics of the breath bar and th
   rect(x, y, wFill, h);
   // fills if mouse is pressed up until limit
   if (wFill <= w && mouseIsPressed == true) {
-    wFill+=2;
-  } 
+    wFill += 2;
+  }
   // empties until fill value is less than or equal to zero
   else if (wFill >= 0 && mouseIsPressed == false) {
     wFill = wFill - 0.2;
   }
+}
+
+function dieing(alpha, clr) {
+
 }
 
 // OBJECT: Wave
@@ -86,7 +107,6 @@ function Wave(anchorX, anchorY, anchorX2, clr) {
   // anchor 2
   this.x4 = anchorX2;
   this.y4 = anchorY;
-
 
   //////////////////////
   // OBJECT FUNCTIONS //
@@ -122,7 +142,6 @@ function Ocean(clr) { // using OBJECT 'Wave' to create a neverending ocean when 
   this.anchorX = 0;
   this.anchorX2 = random(300, 400);
 
-
   //////////////////////
   // OBJECT FUNCTIONS //
   //////////////////////
@@ -149,8 +168,6 @@ function Ocean(clr) { // using OBJECT 'Wave' to create a neverending ocean when 
             oceanY,
             this.waveArray[this.waveArray.length - 1].x4 + random(300, 400),
             this.clr);
-          // test the length for memory leak
-          console.log(this.waveArray.length);
         }
       }
     }
@@ -170,14 +187,34 @@ function Ocean(clr) { // using OBJECT 'Wave' to create a neverending ocean when 
   }
 }
 
-function Stick() { // the stickfigure
-
-}
-
-function swim() { // the stickfigure swimming
-
-}
-
-function Fish() { // the fish that follows the stickfigure through the ocean
+function Dolphin(x_, y_, clr) { // the fish that follows the stickfigure through the ocean
+  /////////////////
+  // CONSTRUCTOR //
+  /////////////////
+  this.color = clr;
+  this.x = x_;
+  this.y = y_;
   
+  this.width = 40;
+  this.height = 20;
+  ellipseMode(CENTER);
+  fill(this.color);
+
+
+  //////////////////////
+  // OBJECT FUNCTIONS //
+  //////////////////////  
+
+  this.initialize = function () {
+
+  }
+  this.swim = function () {
+    
+  }
+  this.jump = function () {
+
+  }
+  this.display = function () {
+
+  }
 }
