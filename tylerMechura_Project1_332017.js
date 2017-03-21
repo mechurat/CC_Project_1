@@ -1,26 +1,44 @@
-var mainX = 0;
-var mainY = 0;
+/*
+Tyler Mechura
+3/7/2017
+Project 1
+Creative Coding with Professor Katherine Bennett
+*/
 
+//////////////////////
+// GLOBAL VARIABLES //
+//////////////////////
+
+// height and y position of ocean rect
 var oceanY = 280;
 var oceanH = 220;
 
+// dolphin initial position
+var dolphinY = oceanY + 50;
+var dolphinX = 50;
+
+// colors
 var clrOcean = 0;
 var clrBreathOut = 0;
 var alphaBreath = 0;
 var clrDolphin = 0;
 
-var dieing = 0;
-
-// Breathing Bar globals
+// Breathing Bar
 var bBarX = 1110;
 var bBarY = 30;
 var bBarW = 150;
 var bBarH = 10;
 
+// Fill of breathing bar
 var wFill = bBarW;
 
+// object initialization
 var ocean;
+var dolphin;
 
+///////////
+// SETUP //
+///////////
 function setup() {
   createCanvas(1300, 500);
 
@@ -31,8 +49,13 @@ function setup() {
   // initializing objects
   ocean = new Ocean(clrOcean);
   ocean.initialize();
+
+  dolphin = new Dolphin(dolphinX, dolphinY, clrDolphin);
 }
 
+////////////////
+// DRAW  LOOP //
+////////////////
 function draw() {
 
   background(220);
@@ -41,17 +64,23 @@ function draw() {
 
   breathBar(bBarX, bBarY, bBarW, bBarH, color(220)); // functionality of the air gauge
 
+  dolphin.display();
+  dolphin.swim();
+
+  // When breath runs out: DO THIS
+  // For some reason I couldn't get this working in breathBar
+  // it works here so ¯\_(ツ)_/¯
   clrBreathOut = color(250, 60, 60, alphaBreath);
-  if (wFill <= 0 && alphaBreath <= 255) {
-    alphaBreath += 0.4;
+  if (wFill <= 0 && alphaBreath <= 255) { // when breath is empty and not at max value of 255: DO THIS
+    alphaBreath += 0.4; // increase alpha, making rect more solid 
     console.log('alpha increased ' + alphaBreath);
-  } else if (wFill > 0 && alphaBreath > 0) {
-    alphaBreath = alphaBreath - 1.5;
+  } else if (wFill > 0 && alphaBreath > 0) { // when breath is at least a little full and is above a minimum value of 0: DO THIS
+    alphaBreath = alphaBreath - 1.5; // decrease alpha, making rect more see-through
     console.log('alpha decreased' + alphaBreath);
   }
   noStroke();
-  fill(clrBreathOut);
-  rect(0, 0, width, height);
+  fill(clrBreathOut); // alphaBreath is the [alpha] parameter in clrBreathOut
+  rect(0, 0, width, height); // rect that covers everything using the clrBreathOut fill
 }
 
 ///////////////////////////////////////////
@@ -59,7 +88,7 @@ function draw() {
 ///////////////////////////////////////////
 
 // Breath Bar
-function breathBar(x, y, w, h, clr) { // the aesthetics of the breath bar and the mouse clicked funcionality
+function breathBar(x, y, w, h, clr) { // the aesthetics of the breath bar and the mouse clicked functionality
   // outer slider
   fill('black');
   rect(x - 5, y - 5, w + 10, h + 10, 8);
@@ -82,10 +111,6 @@ function breathBar(x, y, w, h, clr) { // the aesthetics of the breath bar and th
   else if (wFill >= 0 && mouseIsPressed == false) {
     wFill = wFill - 0.2;
   }
-}
-
-function dieing(alpha, clr) {
-
 }
 
 // OBJECT: Wave
@@ -145,6 +170,7 @@ function Ocean(clr) { // using OBJECT 'Wave' to create a neverending ocean when 
   //////////////////////
   // OBJECT FUNCTIONS //
   //////////////////////
+
   // The Display Loop
   this.display = function () {
       // main rectangle for body of ocean
@@ -194,27 +220,53 @@ function Dolphin(x_, y_, clr) { // the fish that follows the stickfigure through
   this.color = clr;
   this.x = x_;
   this.y = y_;
-  
-  this.width = 40;
-  this.height = 20;
-  ellipseMode(CENTER);
-  fill(this.color);
 
+  this.width = 80;
+  this.height = 40;
 
   //////////////////////
   // OBJECT FUNCTIONS //
   //////////////////////  
 
-  this.initialize = function () {
-
-  }
+  // swim in the direction of the arrow pressed
   this.swim = function () {
-    
+    if (keyIsPressed == true && keyCode == UP_ARROW) { // up
+      if (this.y > oceanY) {
+        this.y -= 2;
+      } else if (keyIsPressed == false) {
+        this.y += 0;
+      }
+    } else if (keyIsPressed == true && keyCode == DOWN_ARROW) { // down
+      if (this.y < height) {
+        this.y += 2;
+      } else if (keyIsPressed == false) {
+        this.y += 0;
+      }
+    } else if (keyIsPressed == true && keyCode == LEFT_ARROW) { // left
+      if (this.x > 0) {
+        this.x -= 2;
+      } else if (keyIsPressed == false) {
+        this.x += 0;
+      }
+    } else if (keyIsPressed == true && keyCode == RIGHT_ARROW) { // right
+      if (this.x < width) {
+        this.x += 2;
+      } else if (keyIsPressed == false) {
+        this.x += 0;
+      }
+    }
   }
-  this.jump = function () {
 
+  // Not Complete
+  this.jump = function () { // have the dolphin 'jump' out of the water
+    // need to use sin function to make a "jump" animation
   }
+
+  // display of the dolphin's position
   this.display = function () {
-
+    stroke(2);
+    ellipseMode(CENTER);
+    fill(this.color);
+    ellipse(this.x, this.y, this.width, this.height);
   }
 }
